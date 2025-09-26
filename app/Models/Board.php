@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ProjectMember extends Model
+class Board extends Model
 {
-    protected $primaryKey = 'member_id';
+    protected $primaryKey = 'board_id';
 
     protected $fillable = [
         'project_id',
-        'user_id',
-        'role',
+        'board_name',
+        'description',
     ];
 
     public function project()
@@ -19,8 +19,8 @@ class ProjectMember extends Model
         return $this->belongsTo(Project::class, 'project_id');
     }
 
-    public function user()
+    public function cards()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->hasMany(Card::class, 'board_id');
     }
 }

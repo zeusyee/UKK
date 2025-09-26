@@ -4,19 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ProjectMember extends Model
+class Comment extends Model
 {
-    protected $primaryKey = 'member_id';
+    protected $primaryKey = 'comment_id';
 
     protected $fillable = [
-        'project_id',
+        'card_id',
         'user_id',
-        'role',
+        'content',
     ];
 
-    public function project()
+    public function card()
     {
-        return $this->belongsTo(Project::class, 'project_id');
+        return $this->belongsTo(Card::class, 'card_id');
     }
 
     public function user()

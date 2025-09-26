@@ -9,20 +9,36 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    protected $table = 'users';
     protected $primaryKey = 'user_id';
-    public $timestamps = false; // karena pakai created_at tanpa updated_at
 
     protected $fillable = [
-        'username',
-        'password',
-        'full_name',
+        'name',
         'email',
+        'password',
+        'role',
         'current_task_status',
-        'role', // tambahkan role
     ];
 
-    protected $hidden = [
-        'password',
-    ];
+    protected $hidden = ['password', 'remember_token'];
+
+    // Relasi
+    public function projectsCreated()
+    {
+        return $this->hasMany(Project::class, 'created_by');
+    }
+
+    public function cardsCreated()
+    {
+        return $this->hasMany(Card::class, 'created_by');
+    }
+
+    public function cardsAssigned()
+    {
+        return $this->hasMany(Card::class, 'assigned_to');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'user_id');
+    }
 }
