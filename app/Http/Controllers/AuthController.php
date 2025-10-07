@@ -19,17 +19,20 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'username' => 'required|unique:users,username',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6|confirmed',
-            'full_name' => 'nullable|string|max:100',
+            'username'   => 'required|unique:users,username',
+            'full_name'  => 'required|string|max:100',
+            'email'      => 'required|email|unique:users,email',
+            'password'   => 'required|min:6|confirmed',
         ]);
 
         User::create([
-            'username' => $request->username,
-            'email' => $request->email,
-            'full_name' => $request->full_name,
-            'password' => Hash::make($request->password),
+            'username'            => $request->username,
+            'full_name'           => $request->full_name,
+            'name'                => $request->full_name, // ✅ isi kolom name juga
+            'email'               => $request->email,
+            'password'            => Hash::make($request->password),
+            'role'                => 'user', // default role
+            'current_task_status' => 'available', // default status
         ]);
 
         return redirect()->route('login')->with('success', 'Registrasi berhasil, silakan login.');
@@ -45,7 +48,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'email'    => 'required|email',
             'password' => 'required',
         ]);
 
@@ -55,13 +58,11 @@ class AuthController extends Controller
             $user = Auth::user();
 
             // Arahkan sesuai role
-            if ($user->role === 'admin') {
-                return redirect()->route('admin.dashboard');
-            } elseif ($user->role === 'leader') {
-                return redirect()->route('leader.dashboard');
-            } else {
-                return redirect()->route('user.dashboard');
-            }
+            return match ($user->role) {
+                'admin'  => redirect()->route('admin.dashboard'),
+                'leader' => redirect()->route('leader.dashboard'),
+                default  => redirect()->route('user.dashboard'),
+            };
         }
 
         return back()->withErrors([

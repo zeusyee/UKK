@@ -12,7 +12,7 @@ class Project extends Model
         'project_name',
         'description',
         'start_date',
-        'end_date',
+        'deadline', // Ganti end_date dengan deadline
         'status',
         'created_by',
     ];

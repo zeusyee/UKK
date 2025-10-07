@@ -10,19 +10,6 @@ return new class extends Migration
     public function up()
     {
         // Create users table if it doesn't exist
-        if (!Schema::hasTable('users')) {
-            Schema::create('users', function (Blueprint $table) {
-                $table->id('user_id');
-                $table->string('name');
-                $table->string('email')->unique();
-                $table->timestamp('email_verified_at')->nullable();
-                $table->string('password');
-                $table->enum('role', ['admin', 'leader', 'user'])->default('user');
-                $table->enum('current_task_status', ['available', 'working', 'break'])->default('available');
-                $table->rememberToken();
-                $table->timestamps();
-            });
-        }
 
         // Create projects table
         if (!Schema::hasTable('projects')) {
